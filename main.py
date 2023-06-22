@@ -1,6 +1,6 @@
 import math
 
-def calculate_option_price(S0, K, omega, r, n):
+def calculate_option_price(S0, X, omega, r, n):
     # Berechnung der notwendigen Parameter
     delta_t = 1.0 / n
     up_factor = math.exp(omega * math.sqrt(delta_t))
@@ -17,27 +17,33 @@ def calculate_option_price(S0, K, omega, r, n):
         stock_prices.append(current_prices)
 
     # Berechnung des Optionspreisbaums
-    option_prices = [[max(price - K, 0) for price in prices] for prices in stock_prices]
+    option_prices = [[max(price - X, 0) for price in prices] for prices in stock_prices]
 
     #Berechnung der risikoneutralen Wahrscheinlichkeiten, da upward-, downwardfaktor und r kostant--> q und 1-q konstant
     q = (1+r-down_factor)/(up_factor-down_factor)
 
-    # Arbeit von rechts nach links im Optionspreisbaum
-    for i in range(n-1, -1, -1):
-        for j in range(i+1):
-            option_prices[i][j] = (option_prices[i+1][j] * q + option_prices[i+1][j+1] * 1-q) * discount_factor
+    #checken ob europäisch oder amerikanisch
+    if europe:
 
+        # Arbeit von rechts nach links im Optionspreisbaum
+        for i in range(n-1, -1, -1):
+            for j in range(i+1):
+                option_prices[i][j] = (option_prices[i+1][j] * q + option_prices[i+1][j+1] * 1-q) * discount_factor
+
+    else:
+        a = 1
     return option_prices[0][0]
 
 # Marktdaten
 S0 = 16290.12
-K = 16900
+X = 16900
 omega = 0.1748
 r = 0.03886
-n = 3
+n = 2
+europe = True
 
 if __name__ == "__main__":
 
-    option_price = calculate_option_price(S0, K, omega, r, n)
+    option_price = calculate_option_price(S0, X, omega, r, n)
     print("Option price:", option_price)
 
