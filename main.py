@@ -20,14 +20,14 @@ def calculate_option_price(S0, X, omega, r, n, europe, T):
     option_prices = [[max((price - X)*0.01, 0) for price in prices] for prices in stock_prices]
 
     #Berechnung der risikoneutralen Wahrscheinlichkeiten, da upward-, downwardfaktor und r kostant--> q und 1-q konstant
-    q = (1+r-down_factor)/(up_factor-down_factor)
+   #q = (1+r-down_factor)/(up_factor-down_factor)
 
     #checken ob europäisch oder amerikanisch
 
     # Arbeit von rechts nach links im Optionspreisbaum
     for i in range(n-1, -1, -1):
         for j in range(i+1):
-            option_prices[i][j] = (option_prices[i+1][j] * q + option_prices[i+1][j+1] * 1-q) * discount_factor
+            option_prices[i][j] = (option_prices[i+1][j] * 0.5 + option_prices[i+1][j+1] * (0.5)) * discount_factor
 
     if not europe:
         # Arbeit von rechts nach links im Optionspreisbaum für amerikanische calls
@@ -42,12 +42,12 @@ S0 = 16290.12
 X = 16900
 omega = 0.1406
 r = 0.03886
-n = 5
+n = 22
 europe = True
 T = 0.5
 
 if __name__ == "__main__":
-
-    option_price = calculate_option_price(S0, X, omega, r, n, europe, T)
-    print("Option price:", option_price)
+    for n in range(1,1001):
+        option_price = calculate_option_price(S0, X, omega, r, n, europe, T)
+        print("Option price: n=", n ,' ', option_price)
 
