@@ -19,7 +19,7 @@ def calculate_option_price(S0, X, omega, r, n, europe, T):
     # Berechnung des Optionspreisbaums
     option_prices = [[max((price - X)*0.01, 0) for price in prices] for prices in stock_prices]
 
-    #Berechnung der risikoneutralen Wahrscheinlichkeiten, da upward-, downwardfaktor und r kostant--> q und 1-q konstant
+    #(glaube brauchen wir nicht) Berechnung der risikoneutralen Wahrscheinlichkeiten, da upward-, downwardfaktor und r kostant--> q und 1-q konstant
    #q = (1+r-down_factor)/(up_factor-down_factor)
 
     #checken ob europäisch oder amerikanisch
