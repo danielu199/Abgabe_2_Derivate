@@ -1,8 +1,8 @@
 import math
 
-def calculate_option_price(S0, X, omega, r, n):
+def calculate_option_price(S0, X, omega, r, n, europe, T):
     # Berechnung der notwendigen Parameter
-    delta_t = 1.0 / n
+    delta_t = T / n
     up_factor = math.exp(omega * math.sqrt(delta_t))
     down_factor = 1.0 / up_factor
     discount_factor = math.exp(-r * delta_t)
@@ -23,15 +23,18 @@ def calculate_option_price(S0, X, omega, r, n):
     q = (1+r-down_factor)/(up_factor-down_factor)
 
     #checken ob europäisch oder amerikanisch
-    if europe:
 
-        # Arbeit von rechts nach links im Optionspreisbaum
+    # Arbeit von rechts nach links im Optionspreisbaum
+    for i in range(n-1, -1, -1):
+        for j in range(i+1):
+            option_prices[i][j] = (option_prices[i+1][j] * q + option_prices[i+1][j+1] * 1-q) * discount_factor
+
+    if not europe:
+        # Arbeit von rechts nach links im Optionspreisbaum für amerikanische calls
         for i in range(n-1, -1, -1):
             for j in range(i+1):
-                option_prices[i][j] = (option_prices[i+1][j] * q + option_prices[i+1][j+1] * 1-q) * discount_factor
+                option_prices[i][j] = max(option_prices[i][j],stock_prices[i][j]-X)
 
-    else:
-        a = 1
     return option_prices[0][0]
 
 # Marktdaten
@@ -41,9 +44,10 @@ omega = 0.1748
 r = 0.03886
 n = 2
 europe = True
+T = 0.5
 
 if __name__ == "__main__":
 
-    option_price = calculate_option_price(S0, X, omega, r, n)
+    option_price = calculate_option_price(S0, X, omega, r, n, europe, T)
     print("Option price:", option_price)
 
