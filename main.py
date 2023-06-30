@@ -40,14 +40,14 @@ def calculate_option_price(S0, X, omega, r, n, europe, T):
 # Marktdaten
 S0 = 16290.12
 X = 16900
-omega = 0.1406
-r = 0.03886
-n = 22
+omega = 0.1748
+r = 0.04886
+n = 100
 europe = True
 T = 0.5
 
 if __name__ == "__main__":
-    for n in range(1,1001):
+    for n in range(1,n+1):
         option_price = calculate_option_price(S0, X, omega, r, n, europe, T)
         print("Option price: n=", n ,' ', option_price)
 
